@@ -94,10 +94,19 @@ curl -X POST "http://localhost:8000/api/ask" \
 
 ## CI/CD Pipeline
 
-The project uses GitHub Actions for automated:
+The project uses GitHub Actions for automated testing of both backend and frontend:
+
+**Backend Pipeline:**
 - **Testing**: Runs pytest on every push/PR
 - **Code Quality**: Checks formatting with Black and linting with Flake8
+
+**Frontend Pipeline:**
+- **Linting**: ESLint code quality checks
+- **Build**: TypeScript compilation and Vite build process
+
+**Infrastructure:**
 - **Cross-platform**: Tests on Ubuntu latest
+- **Node.js 18** and **Python 3.10** environments
 
 ## Development
 
