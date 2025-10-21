@@ -126,11 +126,11 @@ const App = () => {
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeHighlight]}
                     components={{
-                      code: ({ 
-                        className, 
-                        children, 
-                        ...props 
-                      }: React.ComponentPropsWithoutRef<'code'>) => {
+                      code: ({
+                        className,
+                        children,
+                        ...props
+                      }: React.ComponentPropsWithoutRef<"code">) => {
                         const match = /language-(\w+)/.exec(className || "");
                         const isInline = !match;
                         return isInline ? (

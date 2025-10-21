@@ -101,7 +101,7 @@ jobs:
 
       - name: Build and start services
         run: |
-          docker-compose up --build -d
+          docker compose up --build -d
 
       - name: Wait for services
         run: |
@@ -118,4 +118,4 @@ jobs:
 
       - name: Stop services
         run: |
-          docker-compose down
+          docker compose down
