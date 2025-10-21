@@ -28,8 +28,9 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Copy custom nginx configuration as template
 COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Expose port (Render will override with $PORT)
-EXPOSE 3000
+# Expose ports (80 for docker-compose, 3000 for Render)
+EXPOSE 80 3000
 
 # Start nginx with environment variable substitution for PORT
-CMD ["/bin/sh", "-c", "envsubst '$$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]
+# If PORT is not set, defaults to 80 for backward compatibility with docker-compose
+CMD ["/bin/sh", "-c", "export PORT=${PORT:-80} && envsubst '$$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]

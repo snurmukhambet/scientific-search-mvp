@@ -103,19 +103,34 @@ jobs:
         run: |
           docker compose up --build -d
 
-      - name: Wait for services
+      - name: Wait for services to start
         run: |
           echo "Waiting for services to start..."
           sleep 30
 
+      - name: Check running containers
+        run: |
+          docker compose ps
+
       - name: Test backend health
         run: |
+          echo "Testing backend on port 8000..."
           curl -f http://localhost:8000/ || exit 1
 
       - name: Test frontend health
         run: |
+          echo "Testing frontend on port 80..."
           curl -f http://localhost:80/ || exit 1
 
+      - name: View logs on failure
+        if: failure()
+        run: |
+          echo "=== Backend Logs ==="
+          docker compose logs backend
+          echo "=== Frontend Logs ==="
+          docker compose logs frontend
+
       - name: Stop services
+        if: always()
         run: |
           docker compose down
