@@ -8,7 +8,13 @@ app = FastAPI()
 # Настройка CORS для фронтенда
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Vite dev server
+    allow_origins=[
+        "http://localhost:5173",   # Vite dev server
+        "http://127.0.0.1:5173",  # Vite dev server alternative
+        "http://localhost",        # nginx proxy
+        "http://127.0.0.1",       # nginx proxy alternative
+        "http://localhost:80",     # explicit port
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

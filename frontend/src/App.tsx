@@ -32,7 +32,11 @@ const App = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/ask", {
+      // Use environment variable for dev, relative path for production
+      const apiUrl = import.meta.env.VITE_API_URL || "";
+      const endpoint = apiUrl ? `${apiUrl}/api/ask` : "/api/ask";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

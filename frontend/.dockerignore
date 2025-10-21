@@ -7,9 +7,9 @@ yarn-error.log*
 # Production build (keep dist for multi-stage build)
 # dist/
 
-# Development files
-src/
-public/
+# Development files (keep src for build)
+# src/
+# public/
 .vscode/
 .idea/
 
@@ -35,8 +35,9 @@ README.md
 # Config files that aren't needed in container
 .eslintrc*
 .prettierrc*
-vite.config.ts
-tsconfig*.json
+# Keep build configs for Docker build
+# vite.config.ts
+# tsconfig*.json
 
 # Test files
 *.test.*

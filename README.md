@@ -10,6 +10,7 @@ A simple scientific text processing tool using Google Gemini AI for answering qu
 - Real-time question answering with history tracking
 - Automated testing with pytest
 - CI/CD pipeline with GitHub Actions
+- Docker containerization for deployment
 
 ## Technology Stack
 
@@ -417,24 +418,6 @@ kubectl port-forward service/frontend-service 8080:80 -n scientific-search
 ```bash
 make k8s-delete
 ```
-
-## Jenkins Alternative
-
-If you prefer Jenkins over GitHub Actions, use the provided `Jenkinsfile`:
-
-1. **Jenkins Setup:**
-
-   - Install Docker, Docker Compose, and kubectl plugins
-   - Create credentials for Docker Hub and Gemini API key
-   - Configure Slack notifications (optional)
-
-2. **Pipeline Features:**
-   - Parallel testing of backend and frontend
-   - Docker image building and pushing
-   - Security scanning with Trivy
-   - Staging and production deployments
-   - Manual approval for production
-   - Slack notifications
 
 ## Code Quality
 
