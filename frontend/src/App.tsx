@@ -58,7 +58,7 @@ const App = () => {
       };
 
       setMessages((prev) => [...prev, botMessage]);
-    } catch (error) {
+    } catch {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         type: "bot",
@@ -126,7 +126,11 @@ const App = () => {
                     remarkPlugins={[remarkGfm]}
                     rehypePlugins={[rehypeHighlight]}
                     components={{
-                      code: ({ className, children, ...props }: any) => {
+                      code: ({ 
+                        className, 
+                        children, 
+                        ...props 
+                      }: React.ComponentPropsWithoutRef<'code'>) => {
                         const match = /language-(\w+)/.exec(className || "");
                         const isInline = !match;
                         return isInline ? (
