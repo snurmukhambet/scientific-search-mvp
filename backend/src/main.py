@@ -14,6 +14,7 @@ app.add_middleware(
         "http://localhost",        # nginx proxy
         "http://127.0.0.1",       # nginx proxy alternative
         "http://localhost:80",     # explicit port
+        "https://frontend-client.onrender.com",  # Production frontend on Render
     ],
     allow_credentials=True,
     allow_methods=["*"],

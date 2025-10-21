@@ -19,18 +19,17 @@ RUN npm run build
 # Production stage with nginx
 FROM nginx:alpine
 
+# Install gettext for envsubst (environment variable substitution)
+RUN apk add --no-cache gettext
+
 # Copy built assets from build stage
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Copy custom nginx configuration as template
+COPY nginx.conf /etc/nginx/templates/default.conf.template
 
-# Expose port
-EXPOSE 80
+# Expose port (Render will override with $PORT)
+EXPOSE 3000
 
-# Add healthcheck
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:80/ || exit 1
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start nginx with environment variable substitution for PORT
+CMD ["/bin/sh", "-c", "envsubst '$$PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"]

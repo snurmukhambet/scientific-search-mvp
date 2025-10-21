@@ -1,0 +1,135 @@
+# Render Blueprint for Scientific Search MVP
+# Multi-service application deployment configuration
+
+services:
+  # =====================================================
+  # BACKEND SERVICE (ML/API)
+  # =====================================================
+  - type: web
+    name: ml-backend-api
+    runtime: docker
+    region: oregon
+    plan: free # Change to 'starter' or higher for production
+
+    # Docker build configuration
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+
+    # Health check (Render's native, not Docker HEALTHCHECK)
+    healthCheckPath: /
+
+    # Environment variables
+    envVars:
+      # Python optimization
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+
+      # Database URL (manual configuration required)
+      - key: DATABASE_URL
+        sync: false # Must be set manually in Render dashboard
+
+      # API Keys (manual configuration required)
+      - key: GEMINI_API_KEY
+        sync: false # Must be set manually in Render dashboard
+
+      # Port configuration (Render provides this automatically)
+      - key: PORT
+        value: "8000"
+
+    # Auto-deploy on git push
+    autoDeploy: true
+
+    # Build command (optional, Docker handles this)
+    # buildCommand: pip install -r requirements.txt
+
+    # Start command (override CMD in Dockerfile if needed)
+    # startCommand: uvicorn src.main:app --host 0.0.0.0 --port $PORT
+
+  # =====================================================
+  # FRONTEND SERVICE (Client)
+  # =====================================================
+  - type: web
+    name: frontend-client
+    runtime: docker
+    region: oregon
+    plan: free # Change to 'starter' or higher for production
+
+    # Docker build configuration
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+
+    # Health check
+    healthCheckPath: /health
+
+    # Environment variables (BUILD TIME for Vite)
+    envVars:
+      # API URL - points to backend service public URL
+      - key: VITE_API_URL
+        value: https://ml-backend-api.onrender.com
+
+      # Node environment
+      - key: NODE_ENV
+        value: production
+
+      # Port configuration (Render provides this automatically)
+      - key: PORT
+        value: "3000"
+
+    # Auto-deploy on git push
+    autoDeploy: true
+
+    # Routes configuration for client-side routing
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+# =====================================================
+# DATABASES (Optional - add if needed)
+# =====================================================
+# databases:
+#   - name: scientific-search-db
+#     databaseName: scientific_search
+#     user: dbuser
+#     region: oregon
+#     plan: free
+
+# =====================================================
+# DEPLOYMENT NOTES
+# =====================================================
+#
+# 1. MANUAL CONFIGURATION REQUIRED:
+#    - Set DATABASE_URL in Render dashboard (Backend service)
+#    - Set GEMINI_API_KEY in Render dashboard (Backend service)
+#
+# 2. CORS CONFIGURATION:
+#    Backend must allow requests from:
+#    https://frontend-client.onrender.com
+#
+# 3. NGINX PORT CONFIGURATION:
+#    Update frontend/nginx.conf to listen on $PORT instead of 80
+#    Add this to nginx.conf:
+#    ```
+#    server {
+#        listen ${PORT};
+#        ...
+#    }
+#    ```
+#    Or use envsubst to replace PORT at runtime
+#
+# 4. SERVICE URLS:
+#    - Backend: https://ml-backend-api.onrender.com
+#    - Frontend: https://frontend-client.onrender.com
+#
+# 5. DEPLOYMENT TRIGGERS:
+#    - Changes in ./backend/** → rebuilds ml-backend-api
+#    - Changes in ./frontend/** → rebuilds frontend-client
+#    - Changes in render.yaml → rebuilds both services
+#
+# 6. FREE TIER LIMITATIONS:
+#    - Services spin down after 15 minutes of inactivity
+#    - Cold start can take 30-60 seconds
+#    - Consider paid plan for production use
+#
+# =====================================================
