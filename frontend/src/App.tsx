@@ -32,9 +32,13 @@ const App = () => {
     setIsLoading(true);
 
     try {
-      // Use environment variable for dev, relative path for production
+      // Use environment variable for API URL
+      // For Render: VITE_API_URL should be set in render.yaml
+      // For local dev with docker-compose: use relative path (nginx proxy)
       const apiUrl = import.meta.env.VITE_API_URL || "";
       const endpoint = apiUrl ? `${apiUrl}/api/ask` : "/api/ask";
+
+      console.log("API Endpoint:", endpoint); // Debug log
 
       const response = await fetch(endpoint, {
         method: "POST",
