@@ -79,12 +79,6 @@ services:
 
     # Auto-deploy on git push
     autoDeploy: true
-
-    # Routes configuration for client-side routing
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
 # =====================================================
 # DATABASES (Optional - add if needed)
 # =====================================================
