@@ -1,8 +1,18 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from src.core.llm import get_gemini_response
 
 app = FastAPI()
+
+# Настройка CORS для фронтенда
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],  # Vite dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 class Question(BaseModel):
@@ -17,7 +27,7 @@ def read_root():
 @app.post("/api/ask")
 def ask_gemini(question: Question):
     if not question.query.strip():
-        raise HTTPException(status_code=400, detail="Вопрос не может быть пустым")
+        raise HTTPException(status_code=400, detail="Question cannot be empty")
 
     answer = get_gemini_response(question.query)
 

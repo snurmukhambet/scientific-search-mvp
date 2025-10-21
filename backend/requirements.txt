@@ -3,5 +3,6 @@ uvicorn[standard]
 google-generativeai
 python-dotenv
 pytest
+httpx
 black
 flake8

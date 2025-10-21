@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: scientific-search-backend
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    ports:
+      - "8000:8000"
+    networks:
+      - scientific-search-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: scientific-search-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - scientific-search-network
+
+networks:
+  scientific-search-network:
+    driver: bridge
